@@ -25,4 +25,9 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/vuetify'
   ],
+  runtimeConfig:{
+    public:{
+      apiUrl: process.env.MY_API_URL
+    }
+  }
 })
