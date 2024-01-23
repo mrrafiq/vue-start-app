@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
-import type { NuxtPage } from 'nuxt/schema'
+
 export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
@@ -23,7 +23,7 @@ export default defineNuxtConfig({
     },
   },
   plugins: [
-    '~/plugins/vuetify'
+    '~/plugins/vuetify',
   ],
   runtimeConfig:{
     public:{

@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" app expand-on-hover>
       <v-list>
         <v-list-item prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg">
-          <v-list-item-title v-text="userData.email"></v-list-item-title>
+          <!-- <v-list-item-title v-text="userData.email"></v-list-item-title> -->
         </v-list-item>
       </v-list>
 
@@ -45,7 +45,7 @@ const data = menus
 const appName = applicationName
 
 const auth = useAuthStore()
-userData.value = auth.user?.data as object
+userData.value = auth.getUser as object
 
 //when display is on md make v-navigation-drawer show
 function onClickDrawer() {

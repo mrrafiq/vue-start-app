@@ -1,7 +1,5 @@
-import {apiUrl} from '../config'
+export const login = '/login'
 
-export const login = apiUrl+'/login'
+export const logout = '/logout'
 
-export const logout = apiUrl+'/logout'
-
-export const me = apiUrl+'/me'
+export const me = '/me'

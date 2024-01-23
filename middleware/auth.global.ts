@@ -4,9 +4,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   if (!link.includes(to.fullPath)) {
 
-    const authData = useAuthStore()
-    if (!authData.isLoggedIn) {
-      console.log(authData.isLoggedIn);
+    if(useCookie('token') == null){
       return navigateTo('/auth/login')
     }
     navigateTo(to.fullPath)
