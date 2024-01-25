@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   if (!link.includes(to.fullPath)) {
 
-    if(useCookie('token') == null){
+    if(useCookie('token').value == null){
       return navigateTo('/auth/login')
     }
     navigateTo(to.fullPath)

@@ -8,7 +8,7 @@ export default function useApiFetch<T>(path: string, options: UseFetchOptions<T>
   const baseUrl = config.public.apiUrl
 
   const token = useCookie('token')
-  if (token.value) {
+  if (token.value != null) {
     headers['Authorization'] = "Bearer " + token.value as string
   }
 

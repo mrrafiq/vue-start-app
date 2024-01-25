@@ -38,27 +38,21 @@ export const useAuthStore = defineStore('auth',{
   
   actions: {
     async login(credentials: Credentials) {
-      const {data, status, error} = await useApiFetch(api.login,{
+      const {data} = await useApiFetch(api.login,{
         method: 'POST',
         body: credentials
       })
-      const tempData = data.value as User
-      if (status.value == "success") {
-        this.data.token = tempData.data.token
-        this.data.user = tempData.data.user
-        this.isLoggedIn = true
 
-        const token = useCookie('token')
-        token.value = this.data.token
-      }else{
-        console.log(error.value)
-      }
+      const getData = data.value as User
+      const token = useCookie('token')
+      token.value = getData.data.token
+      this.isLoggedIn = true
+      this.data.user = getData.data.user
     },
 
     async me(){
       const {data, status, error} = await useApiFetch(api.me)
       const tempData = data.value as User
-      console.log(tempData.data)
       if (status.value == "success") {
         this.data.user = tempData.data.user
         this.isLoggedIn = true

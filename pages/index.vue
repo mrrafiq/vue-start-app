@@ -1,11 +1,11 @@
 <template>
   <div>
     Hello
-    <!-- <p>{{ auth.getUser.name }}</p> -->
+    <p>{{ auth.getUser.name }}</p>
   </div>
 </template>
 <script setup lang="ts">
 const auth = useAuthStore()
-console.log(auth)
+console.log(auth.getUser)
 
 </script>
