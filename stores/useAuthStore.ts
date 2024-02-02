@@ -3,13 +3,13 @@ import * as api from '@/apis/auth'
 
 type User = {
   data: {
-    token: string,
     user:{
       id: number,
       name: string,
       email: string,
       loginAs: string,
     }
+    token: string,
   },
   isLoggedIn: boolean,
 }
@@ -22,13 +22,13 @@ export const useAuthStore = defineStore('auth',{
   
   state: (): User => ({
     data: {
-      token: '',
       user: {
         id: 0,
         name: '',
         email: '',
         loginAs: '',
-      }
+      },
+      token: ""
     },
     isLoggedIn: false,
   }),
@@ -51,21 +51,16 @@ export const useAuthStore = defineStore('auth',{
     },
 
     async me(){
-      const {data, status, error} = await useApiFetch(api.me)
+      const {data} = await useApiFetch(api.me)
       const tempData = data.value as User
-      if (status.value == "success") {
-        this.data.user = tempData.data.user
-        this.isLoggedIn = true
-      }else {
-        console.log(error.value)
-      }
+      this.data.user = tempData.data.user
+      this.isLoggedIn = true
     },
     async logout() {
       const {status, error} = await useApiFetch(api.logout,{
         method: "POST"
       })
       if (status.value == "success") {
-        this.data.token = ''
         this.data.user = {
           id: 0,
           name: '',

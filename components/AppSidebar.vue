@@ -20,7 +20,7 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block color="error" @click="logout">
+          <v-btn block color="error" @click="logout" :loading="loading">
             Logout
           </v-btn>
         </div>
@@ -43,6 +43,7 @@ var drawer = ref(false)
 const userData = ref()
 const data = menus
 const appName = applicationName
+const loading = ref(false)
 
 const auth = useAuthStore()
 userData.value = auth.getUser as object
@@ -61,6 +62,7 @@ function fitToScreen() {
 
 async function logout() {
   {
+    loading.value = true
     await auth.logout()
     navigateTo('/auth/login')
   }

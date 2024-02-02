@@ -12,7 +12,7 @@
           <v-text-field density="compact" variant="outlined" label="Password" type="password" v-model="form.password">
           </v-text-field>
 
-          <v-btn block color="secondary" type="submit">
+          <v-btn block color="secondary" type="submit" :loading="loading">
             Sign In
           </v-btn>
         </v-form>
@@ -34,9 +34,12 @@ const form = ref({
   password: "password",
 })
 
-async function login() {
-  await auth.login(form.value)
+const loading = ref(false);
 
+async function login() {
+  loading.value = true
+  await auth.login(form.value)
+  // loading.value = false
   navigateTo('/')
 }
 

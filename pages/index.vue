@@ -6,6 +6,5 @@
 </template>
 <script setup lang="ts">
 const auth = useAuthStore()
-console.log(auth.getUser)
 
 </script>
