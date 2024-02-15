@@ -1,5 +1,5 @@
 export const index = '/user'
 export const store = '/user/store'
-export const update = '/user/update/'
+export const update = '/user/update?id='
 export const destroy = '/user/delete/'
 export const show = '/user/show?id='

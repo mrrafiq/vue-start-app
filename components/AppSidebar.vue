@@ -31,7 +31,7 @@
     <v-app-bar-nav-icon @click="onClickDrawer">
       <v-icon>mdi-menu</v-icon>
     </v-app-bar-nav-icon>
-    <v-app-bar-title>
+    <v-app-bar-title @click="navigateTo('/')" class="cursor-pointer">
       {{ appName }}
     </v-app-bar-title>
   </v-app-bar>

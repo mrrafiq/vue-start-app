@@ -18,7 +18,7 @@ export default function useApiFetch<T>(path: string, options: UseFetchOptions<T>
   //   }
   // }
 
-  return useFetch(baseUrl+path, {
+  return useFetch(baseUrl + path, {
     watch: false,
     ...options,
     headers: {
