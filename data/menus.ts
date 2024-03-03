@@ -5,6 +5,12 @@ export const menus = [
     icon: "mdi-account",
     link: "/users",
   },
+  {
+    name: "role-management",
+    title: "Role Management",
+    icon: "mdi-clipboard-account",
+    link: "/roles",
+  },
   // {
   //   name: "shared",
   //   title: "Shared with me",

@@ -20,6 +20,9 @@
       </div>
 
     </v-card>
+    <v-snackbar v-model="showError" color="error">
+      {{ errorMessage }}
+    </v-snackbar>
   </div>
 </template>
 <script setup lang="ts">
@@ -35,12 +38,22 @@ const form = ref({
 })
 
 const loading = ref(false);
+const showError = ref(false)
+const errorMessage = ref('')
 
 async function login() {
   loading.value = true
   await auth.login(form.value)
+
+  if (auth.getUser.error) {
+    showError.value = true
+    errorMessage.value = auth.getUser.error.message
+    loading.value = false
+    console.log(auth.getUser)
+  }else{
+    navigateTo('/')
+  }
   // loading.value = false
-  navigateTo('/')
 }
 
 

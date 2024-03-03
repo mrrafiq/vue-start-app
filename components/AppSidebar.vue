@@ -10,7 +10,7 @@
       <v-divider></v-divider>
 
       <v-list density="compact" nav>
-        <v-list-item v-for="(menu, i) in data" :key="i" :value="menu" :to=menu.link>
+        <v-list-item v-for="(menu, i) in data" :key="i" :value="menu" :to=menu.link exact>
           <template v-slot:prepend>
             <v-icon :icon="menu.icon"></v-icon>
           </template>

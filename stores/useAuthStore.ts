@@ -3,13 +3,15 @@ import * as api from '@/apis/auth'
 
 type User = {
   data: {
-    user:{
+    user: {
       id: number,
       name: string,
       email: string,
       loginAs: string,
+      error: any
     }
     token: string,
+
   },
   isLoggedIn: boolean,
 }
@@ -18,8 +20,8 @@ type Credentials = {
   email: string,
   password: string
 }
-export const useAuthStore = defineStore('auth',{
-  
+export const useAuthStore = defineStore('auth', {
+
   state: (): User => ({
     data: {
       user: {
@@ -27,37 +29,43 @@ export const useAuthStore = defineStore('auth',{
         name: '',
         email: '',
         loginAs: '',
+        error: null,
       },
-      token: ""
+      token: "",
     },
     isLoggedIn: false,
   }),
   getters: {
     getUser: (state) => state.data.user,
   },
-  
+
   actions: {
     async login(credentials: Credentials) {
-      const {data} = await useApiFetch(api.login,{
+      const { data, status, error } = await useApiFetch(api.login, {
         method: 'POST',
         body: credentials
       })
 
-      const getData = data.value as User
-      const token = useCookie('token')
-      token.value = getData.data.token
-      this.isLoggedIn = true
-      this.data.user = getData.data.user
+      if (status.value == 'success') {
+        const getData = data.value as User
+        const token = useCookie('token')
+        token.value = getData.data.token
+        this.isLoggedIn = true
+        this.data.user = getData.data.user
+      } else {
+        this.data.user.error = error.value?.data
+      }
     },
 
-    async me(){
-      const {data} = await useApiFetch(api.me)
+    async me() {
+      const { data } = await useApiFetch(api.me)
+      if (data.value == null) return this.isLoggedIn = false
       const tempData = data.value as User
       this.data.user = tempData.data.user
       this.isLoggedIn = true
     },
     async logout() {
-      const {status, error} = await useApiFetch(api.logout,{
+      const { status, error } = await useApiFetch(api.logout, {
         method: "POST"
       })
       if (status.value == "success") {
@@ -66,6 +74,7 @@ export const useAuthStore = defineStore('auth',{
           name: '',
           email: '',
           loginAs: '',
+          error: null,
         }
         this.isLoggedIn = false
         const token = useCookie('token')
