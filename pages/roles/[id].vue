@@ -43,11 +43,8 @@
         <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" density="compact" label="Search" flat single-line
           hide-details variant="outlined"></v-text-field>
       </div>
-      <v-data-table :items-per-page="10" :headers="headers" :items="permissionsData.data.permissions" class="m-4 p-4"
-        :loading="loading" :search="search">
-        <template v-slot:item.count="{ item }">
-          {{ permissionsData.data.permissions.indexOf(item) + 1 }}
-        </template>
+      <v-data-table :items-per-page="10" :headers="headers" :items="listOfPermissions.data" class="m-4 p-4"
+        :loading="loading" v-model="selected" show-select>
 
       </v-data-table>
     </v-container>
@@ -56,6 +53,7 @@
 </template>
 <script setup lang="ts">
 import * as api from '@/apis/roles'
+import * as permissions_api from '@/apis/permissions'
 
 const route = useRoute()
 const id = route.params.id
@@ -80,19 +78,18 @@ type Permission = {
   guardName: string,
   createdAt: string,
   updatedAt: string,
-  pivot: {
-    roleId: number,
-    permissionId: number
-  }
 }
 
 type Permissions = {
   draw: string,
   recordsTotal: number,
   recordsFiltered: number,
-  data: {
-    permissions: Permission[]
-  }
+  data: Permission[]
+}
+
+type ListPermissions = {
+  data: Permission[]
+
 }
 
 var roleData: Role = {
@@ -109,24 +106,31 @@ var permissionsData: Permissions = {
   draw: "",
   recordsTotal: 0,
   recordsFiltered: 0,
-  data: {
-    permissions: []
-  },
+  data: [],
 }
 
+var listOfPermissions: ListPermissions = {
+  data: []
+
+}
+
+
 const headers = [
-  { title: "#", key: 'count' },
+  { title: "id", key: 'id' },
   { title: "Name", key: 'name' },
   { title: "Guard Name", key: 'guardName' },
   { title: "Created At", key: 'createdAt' },
   { title: "Updated At", key: 'updatedAt' },
 ]
 
+await getListOfPermissions()
 await readData()
 await getPermissionsData()
 
 const detailsKey = Object.keys(roleData.data)
 const detailsValue = Object.values(roleData.data)
+const selected = permissionsData.data
+console.log(selected)
 
 async function readData() {
   const { data, status, error } = await useApiFetch(api.show + id)
@@ -141,6 +145,15 @@ async function getPermissionsData() {
   const { data, status, error } = await useApiFetch(api.show_permissions + id)
   if (status.value == "success") {
     permissionsData = data.value as Permissions
+  } else {
+    console.log(error.value)
+  }
+}
+
+async function getListOfPermissions() {
+  const { data, status, error } = await useApiFetch(permissions_api.index)
+  if (status.value == "success") {
+    listOfPermissions = data.value as ListPermissions
   } else {
     console.log(error.value)
   }
