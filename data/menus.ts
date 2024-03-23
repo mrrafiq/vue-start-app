@@ -11,6 +11,12 @@ export const menus = [
     icon: "mdi-clipboard-account",
     link: "/roles",
   },
+  {
+    name: "permission-management",
+    title: "Permission Management",
+    icon: "mdi-account-lock-outline",
+    link: "/permissions",
+  },
   // {
   //   name: "shared",
   //   title: "Shared with me",
