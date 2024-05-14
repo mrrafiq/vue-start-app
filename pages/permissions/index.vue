@@ -12,6 +12,7 @@
                   <v-card-title>Add Permission</v-card-title>
                   <v-form class="pa-3" @submit.prevent="addData()">
                     <v-text-field density="compact" variant="outlined" label="Name" v-model="form.name"></v-text-field>
+                    <v-text-field density="compact" variant="outlined" label="Guard Name" v-model="form.guard_name"></v-text-field>
                     <v-card-actions class="float-right">
                       <v-btn color="error" @click="dialog = !dialog">Cancel</v-btn>
                       <v-btn color="primary" variant="elevated" type="submit" :loading="btnLoading">Submit</v-btn>
@@ -94,6 +95,7 @@ const searchDisabled = ref(false)
 
 const form = ref({
   name: "",
+  guard_name: "api",
 })
 
 const headers = [
@@ -145,6 +147,7 @@ async function addData() {
     await fetchData()
     form.value = {
       name: "",
+      guard_name: "api",
     }
     dialog.value = false
     btnLoading.value = false
@@ -201,7 +204,7 @@ async function deleteData(id: number) {
 }
 
 async function clickDetail(id: number) {
-  navigateTo('/roles/' + id)
+  navigateTo('/permissions/' + id)
 }
 
 </script>
