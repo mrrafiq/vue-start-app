@@ -32,6 +32,8 @@ definePageMeta({
 })
 
 const auth = useAuthStore()
+const permissions = userAuthPermissions()
+const menu = useUserMenu()
 const form = ref({
   email: "admin@gmail.com",
   password: "password",
@@ -44,6 +46,8 @@ const errorMessage = ref('')
 async function login() {
   loading.value = true
   await auth.login(form.value)
+  await permissions.getPermissions()
+  await menu.getUserMenu()
 
   if (auth.getUser.error) {
     showError.value = true

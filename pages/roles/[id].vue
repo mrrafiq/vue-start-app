@@ -37,7 +37,7 @@
                 <v-card class="pa-3">
                   <v-card-title>Delete Data</v-card-title>
                   <v-card-text>Are you sure you want to delete this data?</v-card-text>
-                  <v-form class="pa-3" @submit.prevent="assignRole()">
+                  <v-form class="pa-3" @submit.prevent="assignPermission()">
                     <v-card-actions class="float-right">
                       <v-btn color="error"
                         @click="dialog=false">Cancel</v-btn>
@@ -161,10 +161,9 @@ async function getSelected() {
   }
 }
 
-async function assignRole() {
+async function assignPermission() {
   btnLoading.value = true
   var postData = selected.value.map((data:any) => data.id)
-  console.log(postData);
   
   const { status, error } = await useApiFetch(api.assign_permissions + id, {
     method: 'POST',

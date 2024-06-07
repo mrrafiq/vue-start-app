@@ -79,6 +79,10 @@ export const useAuthStore = defineStore('auth', {
         this.isLoggedIn = false
         const token = useCookie('token')
         token.value = null
+        const permissions = userAuthPermissions()
+        await permissions.clearPermissions()
+        const menu = useUserMenu()
+        await menu.resetMenu()
       } else {
         console.log(error.value)
       }

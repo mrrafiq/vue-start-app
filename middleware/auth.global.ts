@@ -1,5 +1,6 @@
 // import { useAuth } from '@/stores/auth'
 import { link } from '@/data/public-routes'
+
 export default defineNuxtRouteMiddleware((to, from) => {
 
   if (!link.includes(to.fullPath)) {
@@ -22,3 +23,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
   navigateTo(to.fullPath)
 })
+
+// check if user has permission to access the route
+function isPermitted(permission: string){
+  const permissions = userAuthPermissions()
+  return permissions.userPermissions.includes(permission)
+}

@@ -1,16 +1,16 @@
 <template>
   <div>
-    <PermissionChecker permission="browse_user">
-      <v-card title="User Data">
+    <PermissionChecker permission="browse_employee">
+      <v-card title="Employee Data">
         <v-container>
-          <PermissionChecker permission="add_user" :isComponent=true>
+          <PermissionChecker permission="add_employee" :isComponent=true>
             <v-row justify="end">
               <v-col cols="4">
                 <v-btn color="primary" align-self="end" class="float-right" @click="searchDisabled = true">
                   Add Data+
                   <v-dialog max-width="1024" v-model="dialog" activator="parent">
                     <v-card class="pa-3">
-                      <v-card-title>Add User</v-card-title>
+                      <v-card-title>Add Employee</v-card-title>
                       <v-form class="pa-3" @submit.prevent="addData()">
                         <v-text-field density="compact" variant="outlined" label="Email"
                           v-model="form.email"></v-text-field>
@@ -48,11 +48,11 @@
                   {{ items.data.indexOf(item) + 1 }}
                 </template>
                 <template v-slot:item.actions="{ item }">
-                  <PermissionChecker permission="edit_user" :isComponent=true> 
+                  <PermissionChecker permission="edit_employee" :isComponent=true> 
                     <v-icon @click="readData(item)">mdi-pencil</v-icon>
                     <v-dialog max-width="1024" v-model="editDialog">
                       <v-card class="pa-3">
-                        <v-card-title>Edit User</v-card-title>
+                        <v-card-title>Edit Employee</v-card-title>
                         <v-form class="pa-3" @submit.prevent="editData(editedItem)">
                           <v-text-field density="compact" variant="outlined" label="Email"
                             v-model="editedItem.email"></v-text-field>
@@ -83,9 +83,8 @@
     </PermissionChecker>
   </div>
 </template>
-
 <script setup lang="ts">
-import * as api from "@/apis/users";
+import * as api from "@/apis/employee-data";
 import * as roles_api from "@/apis/roles";
 const dialog = ref(false);
 const loading = ref(false);
@@ -103,10 +102,10 @@ const form = ref({
 
 const headers = [
   { title: "#", key: "count" },
-  { title: "Name", key: "name" },
-  { title: "Email", key: "email" },
-  { title: "Email Verified At", key: "emailVerifiedAt" },
-  { title: "Login As", key: "loginAs" },
+  { title: "Name", key: "user.name" },
+  { title: "Employee Number", key: "employeeNumber" },
+  { title: "Job Title", key: "jobTitle.name" },
+  { title: "Grade", key: "grade" },
   { title: "Created At", key: "createdAt" },
   { title: "Updated At", key: "updatedAt" },
   { title: "Actions", key: "actions" },
@@ -149,7 +148,7 @@ var rolesData: Roles = {
 };
 
 await fetchData();
-await getRolesData();
+// await getRolesData();
 
 async function fetchData() {
   loading.value = true;
@@ -162,14 +161,14 @@ async function fetchData() {
   }
 }
 
-async function getRolesData() {
-  const { data, status, error } = await useApiFetch(roles_api.index);
-  if (status.value == "success") {
-    rolesData = data.value as Roles;
-  } else {
-    console.log(error.value);
-  }
-}
+// async function getRolesData() {
+//   const { data, status, error } = await useApiFetch(roles_api.index);
+//   if (status.value == "success") {
+//     rolesData = data.value as Roles;
+//   } else {
+//     console.log(error.value);
+//   }
+// }
 
 async function addData() {
   btnLoading.value = true;
@@ -211,7 +210,6 @@ async function editData(item: User) {
     body: editedItem.value,
   });
   if (status.value == "success") {  
-    await assignRole(item.id);
     await fetchData();
 
     editDialog.value = false;
@@ -221,23 +219,4 @@ async function editData(item: User) {
   }
 }
 
-async function assignRole(user_id: number) {
-  var selected = editedItem.value.roles.map((data: any) => data.id);
-  console.log(user_id);
-  
-  const { status, error } = await useApiFetch(api.assign_role + user_id, {
-    method: "POST",
-    body: {
-      role_id: selected,
-    },
-  });
-  if (status.value == "success") {
-    await fetchData();
-
-    editDialog.value = false;
-    btnLoading.value = false;
-  } else {
-    console.log(error.value);
-  }
-}
 </script>

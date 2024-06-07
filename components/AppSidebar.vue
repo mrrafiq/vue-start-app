@@ -2,47 +2,26 @@
   <div class=".d-sm-none .d-md-flex">
     <v-navigation-drawer v-model="drawer" app expand-on-hover>
       <v-list>
-        <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-        >
-          <v-list-item-title v-text="userData.email"></v-list-item-title>
+        <v-list-item :prepend-avatar="host + '/' + userData.avatar">
+          <v-list-item-title v-text="userData.name"></v-list-item-title>
         </v-list-item>
       </v-list>
 
       <v-divider></v-divider>
 
       <v-list nav density="compact">
-        <!-- <v-list-item
-          v-for="(menu, i) in data"
-          :key="i"
-          :value="menu"
-          :to="menu.link"
-          exact
-        >
-          <template v-slot:prepend v-if="menu.icon">
-            <v-icon :icon="menu.icon"></v-icon>
-          </template>
+        <div v-for="(menu, i) in data" :key="i">
+          <v-list-group v-if="menu.hide == false" no-action>
+            <template v-slot:activator="{ props }">
+              <v-list-item v-bind="props" :title="menu.group" :prepend-icon="menu.icon"></v-list-item>
+            </template>
+            <div v-for="(item, j) in menu.items" :key="j" :value="item">
+              <v-list-item :to="item.link" :title="item.title" v-if="item.hide == false" :class="{ 'active-menu-item': isActive(item.link) }">
+              </v-list-item>
+            </div>
+          </v-list-group>
+        </div>
 
-          <v-list-item-title
-            v-text="menu.title"
-            v-if="menu.title"
-          ></v-list-item-title>
-          <v-divider v-if="menu.type == 'divider'"></v-divider>
-        </v-list-item> -->
-        <v-list-group v-for="(group, i) in data.group" :key="i" :value="group">
-          <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" :title="group.name" :prepend-icon="group.icon"></v-list-item>
-          </template>
-          <v-list-item
-            v-for="(menu, j) in data.items[i]"
-            :key="j"
-            :value="menu"
-            :to="menu.link"
-            exact
-            :title="menu.title"
-          >
-          </v-list-item>
-        </v-list-group>
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
@@ -62,13 +41,29 @@
     </v-app-bar-title>
   </v-app-bar>
 </template>
+<style>
+.active-menu-item {
+  color: #009ecf; /* Change the color to red when active, modify as needed */
+  background-color: #dff0f5;
+}
+</style>
 <script setup lang="ts">
-import { menus, applicationName } from "@/data/menus";
+import { applicationName } from "@/data/menus";
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+function isActive(link: string): boolean {
+  // This will check if the current route path includes the link
+  return route.path.startsWith(link);
+}
 
 var drawer = ref(false);
 const userData = ref();
-const data = ref(menus);
-console.log(data);
+
+const config = useRuntimeConfig()
+// host backend url
+const host = config.public.apiHost
 
 const appName = applicationName;
 const loading = ref(false);
@@ -95,6 +90,10 @@ async function logout() {
     navigateTo("/auth/login");
   }
 }
+
+const dataMenu = useUserMenu()
+const data = dataMenu.userMenu
+
 
 onMounted(() => {
   fitToScreen();

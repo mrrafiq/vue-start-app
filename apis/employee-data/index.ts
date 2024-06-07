@@ -1,0 +1,5 @@
+export const index = '/employee'
+export const store = '/employee/store'
+export const update = '/employee/update?id='
+export const destroy = '/employee/delete/'
+export const show = '/employee/show?id='
