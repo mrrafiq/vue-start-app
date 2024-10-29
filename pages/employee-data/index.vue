@@ -49,30 +49,7 @@
                 </template>
                 <template v-slot:item.actions="{ item }">
                   <PermissionChecker permission="edit_employee" :isComponent=true> 
-                    <v-icon @click="readData(item)">mdi-pencil</v-icon>
-                    <v-dialog max-width="1024" v-model="editDialog">
-                      <v-card class="pa-3">
-                        <v-card-title>Edit Employee</v-card-title>
-                        <v-form class="pa-3" @submit.prevent="editData(editedItem)">
-                          <v-text-field density="compact" variant="outlined" label="Email"
-                            v-model="editedItem.email"></v-text-field>
-                          <v-text-field density="compact" variant="outlined" label="Name"
-                            v-model="editedItem.name"></v-text-field>
-                          <v-text-field density="compact" variant="outlined" label="Password" type="password"
-                            v-model="editedItem.password"></v-text-field>
-                          <v-select v-model="editedItem.roles" :items="rolesData.data" item-value="id" item-title="name"
-                            density="compact" label="Roles" multiple persistent-hint return-object
-                            variant="outlined"></v-select>
-                          <v-card-actions class="float-right">
-                            <v-btn color="error" @click="
-                              editDialog = !editDialog;
-                            searchDisabled = false;
-                            ">Cancel</v-btn>
-                            <v-btn color="primary" variant="elevated" type="submit" :loading="btnLoading">Update</v-btn>
-                          </v-card-actions>
-                        </v-form>
-                      </v-card>
-                    </v-dialog>
+                    <v-icon @click="clickDetail(item.id)">mdi-eye-circle</v-icon>
                   </PermissionChecker>
                 </template>
               </v-data-table>
@@ -161,14 +138,9 @@ async function fetchData() {
   }
 }
 
-// async function getRolesData() {
-//   const { data, status, error } = await useApiFetch(roles_api.index);
-//   if (status.value == "success") {
-//     rolesData = data.value as Roles;
-//   } else {
-//     console.log(error.value);
-//   }
-// }
+async function clickDetail(id: number){
+  navigateTo('/employee-data/' + id)
+}
 
 async function addData() {
   btnLoading.value = true;

@@ -86,7 +86,7 @@
 </template>
 <script setup lang="ts">
 import * as api from "@/apis/permissions";
-// import * as permission_api from '@/apis/permissions'
+import * as roles_api from "@/apis/roles";
 
 const route = useRoute();
 const id = route.params.id;
@@ -99,7 +99,19 @@ const snackbar = ref(false);
 const message: any = ref();
 const color = ref("success");
 
+type Role = {
+  id: number;
+  name: string;
+  guardName: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type Roles = {
+  data: Role[];
+};
+
+type Permission = {
   data: {
     id: number;
     name: string;
@@ -109,29 +121,11 @@ type Roles = {
   };
 };
 
-type Permission = {
-  id: number;
-  name: string;
-  guardName: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
 type Permissions = {
   draw: string;
   recordsTotal: number;
   recordsFiltered: number;
   data: Permission[];
-};
-
-var rolesData: Roles = {
-  data: {
-    id: 0,
-    name: "",
-    guardName: "",
-    createdAt: "",
-    updatedAt: "",
-  },
 };
 
 var permissionsData: Permissions = {
@@ -142,17 +136,20 @@ var permissionsData: Permissions = {
 };
 
 var permissionData: Permission = {
-  id: 0,
-  name: "",
-  guardName: "",
-  createdAt: "",
-  updatedAt: "",
+  data: {
+    id: 0,
+    name: "",
+    guardName: "",
+    createdAt: "",
+    updatedAt: "",
+  },
 };
 
-var selectedData: Permissions = {
-  draw: "",
-  recordsTotal: 0,
-  recordsFiltered: 0,
+var rolesData: Roles = {
+  data: [],
+};
+
+var selectedData: Roles = {
   data: [],
 };
 
@@ -162,10 +159,9 @@ const headers = [
   { title: "Guard Name", key: "guardName" },
 ];
 
-await getRolesData();
 await readData();
-console.log(rolesData);
-// await getSelected();
+await getSelected();
+await getRolesData();
 
 const detailsKey = Object.keys(permissionData.data);
 const detailsValue = Object.values(permissionData.data);
@@ -174,25 +170,28 @@ async function readData() {
   const { data, status, error } = await useApiFetch(api.show + id);
   if (status.value == "success") {
     permissionData = data.value as Permission;
+    console.log(permissionData);
   } else {
     console.log(error.value);
   }
 }
 
 async function getRolesData() {
-  const { data, status, error } = await useApiFetch(api.show_roles + id);
+  const { data, status, error } = await useApiFetch(roles_api.index);
   if (status.value == "success") {
     rolesData = data.value as Roles;
+    console.log(rolesData);
   } else {
     console.log(error.value);
   }
 }
 
 async function getSelected() {
-  const { data, status, error } = await useApiFetch(api.show_permissions + id);
+  const { data, status, error } = await useApiFetch(api.show_roles + id);
   if (status.value == "success") {
-    selectedData = data.value as Permissions;
+    selectedData = data.value as Roles;
     selected.value = selectedData.data;
+    console.log(selected.value);
   } else {
     console.log(error.value);
   }
@@ -203,9 +202,9 @@ async function assignRole() {
   var postData = selected.value.map((data: any) => data.id);
   console.log(postData);
 
-  const { status, error } = await useApiFetch(api.assign_permissions + id, {
+  const { status, error } = await useApiFetch(api.assign_roles + id, {
     method: "POST",
-    body: { permission_id: postData },
+    body: { role_id: postData },
   });
   if (status.value == "success") {
     snackbar.value = true;
